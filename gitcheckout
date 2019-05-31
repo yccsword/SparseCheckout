@@ -1,0 +1,20 @@
+#!/bin/sh
+workpath=~/tools/platform_script/SparseCheckout-master
+targetpath=`pwd`
+if [ -n "$1" ];then
+    gitpath=`git remote -v | grep fetch | awk -F" " '{print $2}'`
+    if [ ! -n "$gitpath" ]; then
+        echo -e "\033[33mplease enter remote git path\033[0m"
+        read gitpath
+    fi
+    echo $gitpath
+    gitbranch=`git branch -a | grep remotes/m/master | awk '{if(match($0,".*gerrit/([^; ]*)",a))print a[1]}'`
+    if [ ! -n "$gitbranch" ]; then
+        echo -e "\033[33mplease enter remote git branch\033[0m"
+        read gitbranch
+    fi
+    echo $gitbranch
+    (cd $workpath && ./SparseCheckout.sh true $targetpath $gitpath $gitbranch $*)
+else
+    echo  -e "\033[32mgitcheckout checkout-List(support mutlipath|support *)\033[0m"
+fi
